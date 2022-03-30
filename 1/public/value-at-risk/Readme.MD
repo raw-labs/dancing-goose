@@ -5,7 +5,6 @@ An example showing how RAW can be used as Calculation-as-a-Service for resource 
 The associated blog post can be found here:
 http://raw-labs.com/blog/resource-intensive-data-products-calculation-as-a-service-value-at-risk/
 
-
 THIS MAY TAKE A FEW SECONDS TO RUN
 
 https://api.raw-labs.com/demos/1/public/value-at-risk/index-var. (No param defaults to ^DJI)
