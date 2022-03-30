@@ -3,7 +3,7 @@ select symbol, TO_DATE(date, "yyyy-MM-dd") AS Date,
            close, 
            change, 
            changePercent
-from READ("https://www.dropbox.com/s/cy6dymeypfrgijb/5yr_us_stocks.csv?dl=1", cache := interval "5 days")
+from READ("dropbox://mydropbox/Docs/5yr_us_stocks.csv", cache := interval "5 days")
     where symbol in symbols and 
     TO_DATE(date, "yyyy-MM-dd") >= current_date() - timespan
     ORDER BY TO_DATE(date, "yyyy-MM-dd") ASC
@@ -62,7 +62,7 @@ index_var(index: string := "^DJI", confidence: double := 99.0, horizon: interval
     SELECT Sector, historical_var((Select Symbol as symbol, Weight * 10000 as assets 
                                    from PARTITION), confidence, horizon ) as VaR
     FROM 
-      READ("https://www.dropbox.com/s/0f84bajm36nqfla/index_weightings.csv?dl=1", 
+      READ("dropbox://mydropbox/Docs/index_weightings.csv", 
            cache := interval "5 days")
     Where Index = index
     GROUP BY Sector
