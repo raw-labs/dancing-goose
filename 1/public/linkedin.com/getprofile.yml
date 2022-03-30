@@ -7,7 +7,6 @@ metadata:
     - linkedin
 code: rql
 codeFile: code.rql
-declaration: 
 format: json
 security:
   public: true
