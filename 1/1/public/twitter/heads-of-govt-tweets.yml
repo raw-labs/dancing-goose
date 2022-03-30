@@ -1,0 +1,21 @@
+raw: 0.9
+endpoint: GET
+code: rql
+codeFile: queries.rql
+format: json
+computeClass: normal
+enabled: true
+cacheSizeMB: 10
+computeLimitSeconds: 30
+declaration: heads_of_govt_tweets
+metadata:
+  title: Recent Tweets from Heads of Government around the world
+  description: supply a list of countries and keywords to search for
+  tags:
+    - twitter
+    - Wikipedia
+    - countries
+    - government
+security:
+  public: true
+refreshSeconds: 600

@@ -1,0 +1,50 @@
+FROM `github://raw-labs/lib/1/public/visualcrossing.com/weather.rql` 
+  IMPORT timeline;
+
+weather_history_hourly(location: string, yearmonth: string) :={
+  // hourly weather in local time for one month
+  key:=secret("weather.visualcrossing.com");
+  date1 := to_date (yearmonth + "-01", "yyyy-MM-dd");
+  date2 := cast(date1 + interval "1 month" - interval "1 days" as date);
+  res := timeline(secret("weather.visualcrossing.com"), location, date1 ,date2, unitGroup:="metric");
+
+  SELECT 
+    to_date(d.datetime,"yyyy-MM-dd") + to_time( h.datetime, "H:m:s") as datehour,
+    from_unixtime(h.datetimeEpoch) as datehourUTC,
+    h.precip, 
+    h.temp,
+    h.feelslike,
+    h.snow,
+    h.snowdepth,
+    h.windspeed,
+    h.windgust
+   FROM 
+    res.days as d, 
+    d.hours as h
+
+};
+
+weather_history_daily(location: string, yearmonth: string) :={
+  // daily weather in local time for one month
+  key:=secret("weather.visualcrossing.com");
+  date1 := to_date (yearmonth + "-01", "yyyy-MM-dd");
+  date2 := cast(date1 + interval "1 month" - interval "1 days" as date);
+  res := timeline(secret("weather.visualcrossing.com"), location, date1 ,date2, unitGroup:="metric");
+
+  SELECT 
+    to_date(datetime,"yyyy-MM-dd") as date,
+    precip, 
+    temp,
+    tempmax,
+    tempmin,
+    feelslike,
+    feelslikemax,
+    feelslikemin,
+    snow,
+    snowdepth,
+    windspeed,
+    windgust
+   FROM 
+    res.days
+
+};

@@ -1,0 +1,20 @@
+raw: 0.9
+endpoint: GET
+code: rql
+codeFile: queries.rql
+format: json
+computeClass: normal
+enabled: true
+cacheSizeMB: 100
+computeLimitSeconds: 10
+refreshSeconds: 864000
+declaration: heads_of_government
+metadata:
+  title: Heads of Government from every country, with Twitter Account
+  description: Information from Wikipedia (Wikidata)
+  tags:
+    - government
+    - twitter
+    - countries
+security:
+  public: true

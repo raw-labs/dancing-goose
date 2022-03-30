@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://rawlabs-public-test-data.s3.eu-west-1.amazonaws.com/endpoint-schemaV0.9.json
+raw: 0.9
+endpoint: GET
+code: rql
+codeFile: code.rql
+format: json
+computeClass: normal
+enabled: true
+declaration: isslocationosm
+metadata:
+  title: ISS location on OpenStreetMap
+  description: Locate the ISS position above earth
+  tags:
+    - ISS
+security:
+  public: true

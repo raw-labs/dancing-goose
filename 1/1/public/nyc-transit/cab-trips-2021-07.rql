@@ -1,0 +1,52 @@
+cab_trips_2021_07() := {
+
+  typealias t := record(`VendorID`: string,`tpep_pickup_datetime`: string,`tpep_dropoff_datetime`: string,`passenger_count`: string,`trip_distance`: string,`RatecodeID`: string,`store_and_fwd_flag`: string,`PULocationID`: string,`DOLocationID`: string,`payment_type`: string,`fare_amount`: string,`extra`: string,`mta_tax`: string,`tip_amount`: string,`tolls_amount`: string,`improvement_surcharge`: string,`total_amount`: string,`congestion_surcharge`: string);
+
+  //Yellow Taxi Trip Records
+  taxi_yellow := select pickup_dt, count(*) as yellow
+  from 
+  READ_CSV[t]("https://nyc-tlc.s3.amazonaws.com/trip+data/yellow_tripdata_2021-07.csv", cache:=interval "10 days")
+  where tpep_pickup_datetime like "2021-07%" // filter bad dates out
+  group by to_date(substring(tpep_pickup_datetime,1,10),"yyyy-MM-dd") as pickup_dt;
+
+  //Green Taxi Trip Records
+
+  taxi_green := select pickup_dt, count(*) as green
+  from 
+  READ_CSV[t]("https://nyc-tlc.s3.amazonaws.com/trip+data/green_tripdata_2021-07.csv", cache:=interval "10 days")
+  where tpep_pickup_datetime like "2021-07%" // filter bad dates out
+  group by to_date(substring(tpep_pickup_datetime,1,10),"yyyy-MM-dd") as pickup_dt;
+
+  //For Hire Vehicle Trips - High Volume (Uber, Lift, Via)
+  //typealias - different structure
+  typealias tf := record(`hvfhs_license_num`: string,`dispatching_base_num`: string,`pickup_datetime`: string,`dropoff_datetime`: string,`PULocationID`: string,`DOLocationID`: string,`SR_Flag`: string nullable);
+
+  fhv_hv := select pickup_dt, 
+    SUM(CASE WHEN hvfhs_license_num = "HV0003" THEN 1 ELSE 0 END) as uber,
+    SUM(CASE WHEN hvfhs_license_num = "HV0004" THEN 1 ELSE 0 END) as via,
+    SUM(CASE WHEN hvfhs_license_num = "HV0005" THEN 1 ELSE 0 END) as lyft
+  from 
+  READ_CSV[tf]("https://nyc-tlc.s3.amazonaws.com/trip+data/fhvhv_tripdata_2021-07.csv", cache:=interval "10 days")
+  where pickup_datetime like "2021-07%" // filter bad dates out
+  GROUP BY to_date(substring(pickup_datetime,1,10),"yyyy-MM-dd") as pickup_dt;
+
+  //For Hire Vehicle Trips - Others (limos, etc.)
+  typealias to := record(`dispatching_base_num`: string,`pickup_datetime`: string,`dropoff_datetime`: string,`PULocationID`: string nullable,`DOLocationID`: string nullable,`SR_Flag`: string nullable,`Affiliated_base_number`: string nullable);
+
+  fhv_other := select pickup_dt, count(*) as fhv_other 
+      from READ_CSV[to]("https://nyc-tlc.s3.amazonaws.com/trip+data/fhv_tripdata_2021-07.csv", cache:=interval "10 days") 
+      where pickup_datetime like "2021-07%" // filter bad dates out 
+      GROUP BY to_date(substring(pickup_datetime,1,10),"yyyy-MM-dd") as pickup_dt 
+
+
+  // return the join of the datasets
+  select y.pickup_dt, y.yellow, g.green, h.uber, h.lyft, h.via, o.fhv_other
+  from
+   taxi_yellow y, taxi_green g, fhv_other o, fhv_hv h
+  where
+    y.pickup_dt = g.pickup_dt and
+    y.pickup_dt = o.pickup_dt and
+    y.pickup_dt = h.pickup_dt
+  order by y.pickup_dt
+    
+};

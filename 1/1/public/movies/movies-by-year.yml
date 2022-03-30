@@ -1,0 +1,16 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Movies by year
+  description: Get movies by year from the Wikipedia Movie database
+  tags:
+    - movies
+    - wikipedia
+code: rql
+codeFile: movies.rql
+declaration: search_by_year
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

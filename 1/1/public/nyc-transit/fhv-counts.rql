@@ -1,0 +1,24 @@
+fhv_type_lookup(hvfhs_license_num:string) := {
+CASE 
+  WHEN hvfhs_license_num = "HV0003" THEN "uber" 
+  WHEN hvfhs_license_num = "HV0004" THEN "via" 
+  WHEN hvfhs_license_num = "HV0005" THEN "lyft" 
+  ELSE "unknown"
+END
+};
+
+fhv_counts() := {
+  select  pickupdate,  
+         fhv_type_lookup(hvfhs_license_num) as type,
+        count(*) as rides
+  from 
+  READ("https://nyc-tlc.s3.amazonaws.com/trip+data/fhvhv_tripdata_2021-07.csv", cache:=interval "10 days") 
+  GROUP BY 
+    to_date(substring(pickup_datetime,1,10),"yyyy-MM-dd") as pickupdate,
+    hvfhs_license_num
+  ORDER BY pickupdate
+};
+
+my_enum() := {
+ enumerate(fhv_counts())
+};

@@ -1,0 +1,15 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Rencent pages from sitemap.xml
+  description: Get the latests modified pages on a website
+  tags:
+    - sitemap.xml
+code: rql
+codeFile: code.rql
+declaration: recentpages
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

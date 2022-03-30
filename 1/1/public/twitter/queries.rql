@@ -1,0 +1,26 @@
+// import the twitter function 
+FROM `github://raw-labs/lib/1/public/twitter.com/twitter.rql`
+  IMPORT get_tweets_search_recent;
+
+heads_of_govt_tweets( countries:string, keywords:string :="" ) := {
+  // use wikipedia to retrieve twitter accounts from heads of government
+  twitterAccounts := SELECT DISTINCT twittername
+      FROM READ("https://api.raw-labs.com/examples/1/public/wikipedia/heads-of-government")
+      WHERE twittername is not null
+      AND countryLabel in split(countries,",");
+
+  // iterate through the twitter accounts to query using the keywords     
+  SELECT
+    get_tweets_search_recent( 
+      client_id:= secret("twitter.com_clientId"),
+      client_secret:= secret("twitter.com_clientSecret"),
+      query:= "(from:"+twittername+") " + mkstring(split(keywords,",")," OR "),
+      max_results:=100,
+      `tweet.fields`:="id,text,geo,created_at,entities,author_id,in_reply_to_user_id,referenced_tweets",
+      expansions:= "author_id",
+      `user.fields`:="username,name,id"
+    )
+  FROM twittername IN twitterAccounts
+
+};
+

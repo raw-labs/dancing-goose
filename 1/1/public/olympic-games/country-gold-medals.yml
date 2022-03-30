@@ -1,0 +1,15 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Country Olympic gold medal statistics
+  description: Get year, city, and the number of the gold medals of the country name specified
+  tags:
+    - olympics
+code: rql
+codeFile: code.rql
+declaration: countryGoldMedals
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

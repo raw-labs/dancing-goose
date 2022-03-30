@@ -1,0 +1,23 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Cab trips, by hour, with weather
+  description: Yellow and Green cab trips, summarised by hour, with weather from that hour (metric). Parameter is in format yyyy-MM
+  tags:
+    - nyc
+    - transit
+    - taxi
+    - weather
+code: rql
+codeFile: weather_blog.rql
+declaration: hourly_cab_trips_weather
+format: csv
+security:
+  public: false
+  scopes: 
+   - weather_auth
+computeClass: normal
+cacheSizeMB: 512
+computeLimitSeconds: 60
+refreshSeconds: 86400
+enabled: true

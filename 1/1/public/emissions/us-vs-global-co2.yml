@@ -1,0 +1,19 @@
+raw: 0.9
+endpoint: GET
+code: rql
+codeFile: queries.rql
+format: json
+computeClass: normal
+enabled: true
+cacheSizeMB: 20
+computeLimitSeconds: 30
+declaration: us_vs_global_co2_emissions
+metadata:
+  title: US vs Global CO2 Emissions, by Year
+  description: Data from FRED (US) and OurWorldInData (Global). Dataset from 1980
+  tags:
+    - emissions
+    - environment
+security:
+  public: true
+refreshSeconds: 864000

@@ -1,0 +1,17 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Index VAR calculation
+  description: Returns the VaR (Value at Risk) for a portfolio of assets described by an index (either ^DJI, ^GSPC or ^IXIC currently) representing 1 million shares by index weight, using historical simulation method
+  tags:
+    - finance
+    - VaR
+code: rql
+codeFile: var.rql
+declaration: index_var
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true
+refreshSeconds: 86400

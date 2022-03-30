@@ -1,0 +1,32 @@
+athletes :=
+  READ_CSV("https://raw-tutorial.s3.eu-west-1.amazonaws.com/summer_olympics.csv")
+  UNION ALL
+  READ_CSV("https://raw-tutorial.s3.eu-west-1.amazonaws.com/winter_olympics.csv")
+
+country_codes :=
+  READ_CSV("https://pkgstore.datahub.io/core/country-codes/country-codes_csv/data/c4df23af89a9386f92cbddcd54bc9852/country-codes_csv.csv", has_header := true)
+
+athlete(athlete_name: string) :=
+  SELECT *
+  FROM athletes
+  WHERE Athlete = athlete_name
+  ORDER BY Year ASC
+
+countryMedals(country_name: string) :=
+  SELECT Year, City,
+    COUNT(CASE WHEN Medal = "Gold" THEN 1 ELSE NULL END) AS Gold,
+    COUNT(CASE WHEN Medal = "Silver" THEN 1 ELSE NULL END) AS Silver,
+    COUNT(CASE WHEN Medal = "Bronze" THEN 1 ELSE NULL END) AS Bronze
+  FROM athletes, country_codes
+  WHERE LOWER(country_name) = LOWER(official_name_en) AND Country = IOC
+  GROUP BY Year, City
+  HAVING COUNT(*) > 0
+  ORDER BY Year DESC;
+
+countryGoldMedals(country_name: string) :=
+ SELECT Year, City, COUNT(CASE WHEN Medal = "Gold" THEN 1 ELSE NULL END) As Gold
+ FROM athletes, country_codes
+ WHERE LOWER(country_name) = LOWER(official_name_en) AND Country = IOC
+ GROUP BY Year, City
+ HAVING COUNT(*) > 0
+ ORDER BY Year DESC;

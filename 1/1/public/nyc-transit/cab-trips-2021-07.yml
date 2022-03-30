@@ -1,0 +1,20 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Cab trips, daily for one month 2021, July
+  description: Counts of all trips by Green, Yellow, FHVs for 2021, July for blog post example.
+  tags:
+    - nyc
+    - transit
+    - uber
+    - fhv
+code: rql
+codeFile: cab-trips-2021-07.rql
+declaration: cab_trips_2021_07
+format: csv
+security:
+  public: true
+computeClass: normal
+computeLimitSeconds: 30
+refreshSeconds: 86400
+enabled: true

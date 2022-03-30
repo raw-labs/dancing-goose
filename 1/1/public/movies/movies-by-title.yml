@@ -1,0 +1,16 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Movies by title
+  description: Get movies matching title string from the Wikipedia Movie database maintained by hello@raw-labs.com
+  tags:
+    - movies
+    - wikipedia
+code: rql
+codeFile: movies.rql
+declaration: search_by_title
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

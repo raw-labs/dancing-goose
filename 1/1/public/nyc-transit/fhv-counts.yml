@@ -1,0 +1,18 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Simple Example API of counts
+  description: Counts of FHV Trips in July 2021
+  tags:
+    - nyc
+    - transit
+    - uber
+    - fhv
+code: rql
+codeFile: fhv-counts.rql
+declaration: fhv_counts
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

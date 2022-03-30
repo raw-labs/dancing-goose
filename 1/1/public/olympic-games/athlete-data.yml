@@ -1,0 +1,15 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Athlete medals
+  description: Get all medals for athlete name
+  tags:
+    - olympics
+code: rql
+codeFile: code.rql
+declaration: athlete
+format: json
+computeClass: normal
+security:
+  public: true
+enabled: true

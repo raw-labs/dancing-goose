@@ -1,0 +1,48 @@
+// SPARQL query
+// heads of government and their Twitter accounts
+query:="""
+PREFIX schema: <http://schema.org/>
+SELECT DISTINCT ?countryLabel ?hgovernmentLabel ?twittername ?article
+{
+  ?country wdt:P31 wd:Q3624078 .
+  FILTER NOT EXISTS {?country wdt:P31 wd:Q3024240}
+  ?country p:P6 ?statement .    
+  ?statement ps:P6 ?hgovernment .
+  FILTER NOT EXISTS { ?statement pq:P582 ?x } 
+  ?country wdt:P6 ?hgovernment .
+  ?article schema:about ?hgovernment .
+  ?article schema:inLanguage "en" .
+  ?article schema:isPartOf <https://en.wikipedia.org/> 
+  OPTIONAL { ?hgovernment wdt:P2002 ?twittername . }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
+}
+""";
+
+// wikidata's data binding structure
+typealias t := 
+  record(
+    head: record(
+      variable: collection(record(`@name`: string))),
+    results: record(
+      result: collection(record(
+          binding: collection(record(
+              `@name`: string,
+              uri: string nullable,
+              literal: record(
+                `@lang`: string nullable,
+                `#text`: string nullable) nullable))))));
+
+
+heads_of_government() := {
+  
+  // query XML structure returned from Wikidata
+  select 
+      cfirst(select literal.`#text` from binding where `@name`= "countryLabel" and literal.`@lang` = "en") as countryLabel, 
+      cfirst(select literal.`#text` from binding where `@name`= "hgovernmentLabel" and literal.`@lang` = "en") as hgovernmentLabel, 
+      cfirst(select literal.`#text` from binding where `@name`= "twittername") as twittername,
+      cfirst(select uri from binding where `@name`= "article") as article
+  from
+      read_xml[t]("https://query.wikidata.org/bigdata/namespace/wdq/sparql",
+          http_args:= [("query", query)]).results.result
+};
+
