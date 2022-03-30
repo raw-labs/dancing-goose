@@ -1,0 +1,18 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Countries within a Region
+  description: List of Country information, using Region name to filter as parameter
+  tags:
+    - countries
+    - iso
+    - region
+    - geography
+code: rql
+codeFile: ../../code.rql
+declaration: countries_by_region
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

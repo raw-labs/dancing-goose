@@ -1,0 +1,15 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Get location closest from ISS position
+  description: Get closest location from the lat/lon ISS position based on opencagedata.com
+  tags:
+    - geocoding
+code: rql
+codeFile: code.rql
+declaration: isslocation
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

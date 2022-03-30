@@ -1,0 +1,16 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Currency converter
+  description: Currency conversion based on live rates
+  tags:
+    - rates
+    - currency
+code: rql
+declaration: convert
+codeFile: code.rql
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

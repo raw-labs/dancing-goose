@@ -1,0 +1,15 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Reverse geocoding
+  description: Get closest city from lat/lon based on opencagedata.com
+  tags:
+    - geocoding
+code: rql
+codeFile: code.rql
+declaration: getlocation
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

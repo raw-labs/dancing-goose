@@ -1,0 +1,91 @@
+
+// interface to opencagedata.com
+// https://opencagedata.com/api#intro
+
+api_key := "83d91ec79e8842efa3a63d469af9b9fe"
+
+typealias reverse_geocode := record( 
+    `documentation`: string,
+    `licenses`: collection(record(`name`: string,`url`: string)),
+    `rate`: record(`limit`: int,`remaining`: int,`reset`: int),
+    `results`: collection( record(
+        `annotations`: record(
+            `DMS`: record(`lat`: string,`lng`: string),
+            `MGRS`: string,
+            `Maidenhead`: string,
+            `Mercator`: record(`x`: double,`y`: double),
+            `OSM`: record(`edit_url`: string nullable,`note_url`: string,`url`: string),
+            `UN_M49`: record(
+                `regions`: record(
+                    `ASIA`: string,
+                    `EASTERN_ASIA`: string,
+                    `MN`: string,
+                    `WORLD`: string
+               ),
+                `statistical_groupings`: collection(string)
+            ) nullable,
+            `callingcode`: int nullable,
+            `currency`: record(
+                `alternate_symbols`: collection(nothing),
+                `decimal_mark`: string,
+                `format`: string,
+                `html_entity`: string,
+                `iso_code`: string,
+                `iso_numeric`: string,
+                `name`: string,
+                `smallest_denomination`: int,
+                `subunit`: string,
+                `subunit_to_unit`: int,
+                `symbol`: string,
+                `symbol_first`: int,
+                `thousands_separator`: string
+            ) nullable,
+            `flag`: string nullable,
+            `geohash`: string,
+            `qibla`: double,
+            `roadinfo`: record(`drive_on`: string,`speed_in`: string),
+            `sun`: record(
+                `rise`: record(`apparent`: int,`astronomical`: int,`civil`: int,`nautical`: int),
+                `set`: record(`apparent`: int,`astronomical`: int,`civil`: int,`nautical`: int)
+            ),
+            `timezone`: record(
+                `name`: string,
+                `now_in_dst`: int,
+                `offset_sec`: int,
+                `offset_string`: string,
+                `short_name`: string
+            ),
+            `what3words`: record(`words`: string)
+        ),
+        `bounds`: record(
+            `northeast`: record(`lat`: double,`lng`: double),
+            `southwest`: record(`lat`: double,`lng`: double)
+        ),
+        `components`: record(
+            `ISO_3166-1_alpha-2`: string nullable,
+            `ISO_3166-1_alpha-3`: string nullable,
+            `_category`: string nullable,
+            `_type`: string nullable,
+            `continent`: string nullable,
+            `country`: string nullable,
+            `country_code`: string nullable,
+            `county`: string nullable,
+            `state`: string nullable
+        ),
+        `confidence`: int,
+        `formatted`: string,
+        `geometry`: record(`lat`: double,`lng`: double)
+    )
+    ),
+    `status`: record(`code`: int,`message`: string),
+    `stay_informed`: record(`blog`: string,`twitter`: string),
+    `thanks`: string,
+    `timestamp`: record(`created_http`: string,`created_unix`: int),
+    `total_results`: int
+)
+
+getlocation(lat:double, lon:double) := {
+    d := HTTP( "https://api.opencagedata.com/geocode/v1/json?key="+api_key+"&q="+lat+"%2C"+lon );
+    cfirst( select formatted from parse_json[reverse_geocode](d.data).results )
+}
+

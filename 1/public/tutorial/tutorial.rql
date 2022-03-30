@@ -1,0 +1,146 @@
+// This file contains the RAW SQL code for the tutorials posts
+// which can be found on the website:
+// https://raw-labs.com/raw-blog/
+
+//============================================================================
+//
+// Tutorial - First steps with RAW SQL
+//
+//============================================================================
+
+// airports collection
+airports := READ("https://raw-tutorial.s3.amazonaws.com/airports.csv");
+
+// returns 5 airports from the csv file
+airports5() := {
+    SELECT * FROM airports LIMIT 5 
+}
+
+// returns the number of airports per country sorted descending
+airports_per_country() := {
+    SELECT Country, COUNT(*) AS Number_Airports
+    FROM airports
+    GROUP BY Country
+    ORDER BY Number_Airports DESC
+}
+
+// returns the number of airports for one country
+airports_for_country(country: string) := {
+    SELECT Country, COUNT(*) AS Number_Airports
+    FROM airports as a
+    WHERE a.Country = country
+    GROUP by a.Country
+}
+
+//============================================================================
+//
+// Tutorial - More complex data with RAW SQL
+//
+//============================================================================
+
+// trips collection
+trips := READ("https://raw-tutorial.s3.amazonaws.com/trips.json"); 
+
+show_trips() := {
+    SELECT origin, dates.departure AS departure, dates.arrival AS arrival
+    FROM trips
+}
+
+// sales collection
+sales := READ("https://raw-tutorial.s3.amazonaws.com/sales.json");
+
+show_sales() := {
+    SELECT s.country, s.products
+    FROM sales AS s
+}
+
+show_sales_flat() := {
+    SELECT s.country, product.category, product.cost
+    FROM sales AS s, s.products AS product
+}
+
+// articles record
+articles := READ("https://raw-tutorial.s3.amazonaws.com/article.xml") ;
+
+show_articles() := {
+    articles
+}
+
+one_plus_one() := {
+    1+1
+}
+
+show_title() := {
+    articles.title
+}
+
+show_content() := {
+    articles.contents
+}
+
+show_authors() := {
+    articles.authors
+}
+
+show_authors_names() := {
+    SELECT name.`@title` AS title, name.`#text` AS name
+    FROM articles.authors.name AS name
+}
+
+//============================================================================
+//
+// Tutorial - Producing complexe data with RAW SQL
+//
+//============================================================================
+
+all_sales() := {
+    SELECT * from sales
+}
+
+products_cost_per_country() := {
+    SELECT s.country, (SELECT p.cost FROM s.products AS p) AS products_cost
+    FROM sales AS s
+}
+
+products_cost_over_60_per_country() := {
+    SELECT s.country, (SELECT p.cost FROM s.products AS p WHERE p.cost > 60) AS products_cost_over_60
+    FROM sales AS s
+}
+
+number_products_cost_over_60_per_country() := {
+    SELECT s.country, (SELECT COUNT(*) FROM s.products AS p WHERE p.cost > 60) AS number_products_cost_over_60
+    FROM sales AS s
+}
+
+airports_per_country_detail() := {
+    SELECT Country, *
+    FROM airports
+    GROUP BY Country
+}
+
+airports_per_country_name_city() := {
+    SELECT Country, (SELECT Name, City FROM *)
+    FROM airports
+    GROUP BY Country
+}
+
+airports_per_country_per_city() := {
+    SELECT Country, (SELECT City, COUNT(*) FROM * GROUP BY City)
+    FROM airports
+    GROUP BY Country
+}
+
+sales_countries_collection() := {
+    SELECT country AS name FROM sales
+}
+
+sales_countries_strings() := {
+    SELECT country FROM sales
+}
+
+number_of_airports_countries() := {
+    (
+        Number_Of_Airports: (SELECT COUNT(*) FROM airports),
+        Countries: (SELECT DISTINCT Country FROM airports)
+    )
+}

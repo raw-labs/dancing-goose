@@ -1,0 +1,15 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Registred companies
+  description: Check datainfogreffe.fr
+  tags:
+    - company_info
+code: rql
+codeFile: code.rql
+declaration: societes_immatriculees
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

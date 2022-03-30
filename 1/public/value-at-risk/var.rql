@@ -1,0 +1,70 @@
+close_price_history(symbols: collection(string), timespan: interval) := {
+select symbol, TO_DATE(date, "yyyy-MM-dd") AS Date,
+           close, 
+           change, 
+           changePercent
+from READ("https://www.dropbox.com/s/cy6dymeypfrgijb/5yr_us_stocks.csv?dl=1", cache := interval "5 days")
+    where symbol in symbols and 
+    TO_DATE(date, "yyyy-MM-dd") >= current_date() - timespan
+    ORDER BY TO_DATE(date, "yyyy-MM-dd") ASC
+}
+    
+// VaR calc
+
+historical_var(
+    portfolio: collection(record(symbol: string, assets: double)), 
+    confidence: double := 99.0,                // some default, 99% confidence
+    timespan: interval := interval "1 year"    // some default, 1 years history
+) := {
+  
+    // For this demo we show interoperability with Python.
+    // could be your own library or a public one.
+    valueAtRisk := \python(returns: collection(double), confidence: double): double -> $$$
+        from math import ceil, floor
+        size = len(returns)
+        srt = sorted(returns)
+        indexR = size * ((100 - confidence) / 100) - 1;
+        upper = ceil(indexR) 
+        lower = floor(indexR) 
+        return (upper - indexR)*srt[int(lower)] + (indexR - lower)*srt[int(upper)]
+    $$$;
+
+    // portfolio history - all the close prices for the timespan
+    pf_history := close_price_history((SELECT DISTINCT symbol FROM portfolio), timespan);
+
+    // last close for each stock
+    latest := SELECT symbol, LAST(close) AS close
+              FROM pf_history
+              GROUP BY symbol;
+
+    // total portfolio value now
+    pf_latest_value :=  SELECT SUM(l.close * p.assets)
+                        FROM latest l, 
+                             portfolio p
+                        WHERE l.symbol = p.symbol;
+    
+    // daily return of the portfolio over the historical period
+    pf_returns := SELECT Date, 
+                  ISNULL(SUM(h.changePercent * p.assets * h.close)/SUM(p.assets * h.close),0) AS pct_return
+                  FROM pf_history h, 
+                       portfolio p
+                  WHERE h.symbol = p.symbol
+                  GROUP BY h.Date
+                  ORDER BY Date;
+
+    // VaR in dollars for this portfolio
+    valueAtRisk((SELECT pct_return FROM pf_returns), confidence) * pf_latest_value
+};
+
+
+index_var(index: string := "^DJI", confidence: double := 99.0, horizon: interval := interval "5 years" ) :=
+{
+    SELECT Sector, historical_var((Select Symbol as symbol, Weight * 10000 as assets 
+                                   from PARTITION), confidence, horizon ) as VaR
+    FROM 
+      READ("https://www.dropbox.com/s/0f84bajm36nqfla/index_weightings.csv?dl=1", 
+           cache := interval "5 days")
+    Where Index = index
+    GROUP BY Sector
+    ORDER BY VaR DESC
+};

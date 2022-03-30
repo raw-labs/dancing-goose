@@ -1,0 +1,27 @@
+
+// Apollo13 transcription from a startime
+transcriptionFrom(startTime: string nullable) := {
+    select t.Time, s.Role, t.Transcription from 
+        read_csv("https://raw.githubusercontent.com/raw-labs/demos.raw-labs.com/master/1/public/apollo13/AS13_TEC.csv",
+        encoding:="utf-8", has_header:=true) as t,
+        read_csv("https://raw.githubusercontent.com/raw-labs/demos.raw-labs.com/master/1/public/apollo13/speakers.csv",encoding:="utf-8", has_header:=true) as s
+        where s.Acronym = t.Speaker and t.Time>=startTime
+        order by t.Time
+}
+
+// full Apollo13 transcription
+transcriptionFull() := {
+    select t.Time, s.Role, t.Transcription from 
+        read_csv("https://raw.githubusercontent.com/raw-labs/demos.raw-labs.com/master/1/public/apollo13/AS13_TEC.csv",encoding:="utf-8", has_header:=true) as t,
+        read_csv("https://raw.githubusercontent.com/raw-labs/demos.raw-labs.com/master/1/public/apollo13/speakers.csv", encoding:="utf-8", has_header:=true) as s
+        where s.Acronym = t.Speaker
+        order by t.Time
+}
+
+// Start transcription from famous quote "Houston, we've had a problem."
+HoustonWeveHadAProblem() := {
+    problemTime := select t.Time from 
+        read_csv("https://raw.githubusercontent.com/raw-labs/demos.raw-labs.com/master/1/public/apollo13/AS13_TEC.csv", encoding:="utf-8", has_header:=true) as t 
+        where t.Transcription like "Houston, we\'ve had a problem.%";
+    transcriptionFrom(cfirst(problemTime))
+}

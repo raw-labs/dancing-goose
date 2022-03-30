@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://rawlabs-public-test-data.s3.eu-west-1.amazonaws.com/endpoint-schemaV0.9.json
+raw: 0.9
+endpoint: GET
+code: rql
+codeFile: code.rql
+format: json
+computeClass: normal
+enabled: true
+cacheSizeMB: 200
+computeLimitSeconds: 10
+declaration: stat_covid
+metadata:
+  title: This is an endpoint made to retrieve Covid stats from French gov.
+  description: description
+  tags:
+    - tag1
+security:
+  public: true
+refreshSeconds: 10

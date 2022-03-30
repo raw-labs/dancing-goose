@@ -1,0 +1,17 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Geocode a string
+  description: Return Geocode information for an input string (courtesy of google maps api)
+  tags:
+    - google
+    - maps
+    - geocode
+code: rql
+codeFile: geocode.rql
+declaration: geocode
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

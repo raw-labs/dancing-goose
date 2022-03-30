@@ -1,0 +1,20 @@
+Location; Acronym; Role; Name
+Spacecraft;CDR;Commander;James A. (Jim) Lovell Jr.
+Spacecraft;CMP;Command module pilot;John L. Swigert Jr.
+Spacecraft;LMP;Lunar module pilot;Fred W. Haise Jr.
+Spacecraft;SC;Unidentified crewmember;
+Spacecraft;MS;Multiple speakers;
+Mission Control Centers;CC;Capsule communicator (CAP COMM);
+Mission Control Centers;LCC;Launch Control Center;
+Mission Control Centers;F;Flight director;
+Mission Control Centers;S;Surgeon;
+Remote sites;AB;Airboss (Recovery aircraft);
+Remote sites;CT;Communications technician (COMM TECH);
+Remote sites;IWO;USS Iwo Jima;
+Remote sites;P-l;Photographic helicopters;
+Remote sites;P-2;Photographic helicopters;
+Remote sites;P-3;Photographic helicopters;
+Remote sites;R-l;Recovery helicopters;
+Remote sites;R-2;Recovery helicopters;
+Remote sites;R-3;Recovery helicopters;
+Remote sites;R-4;Recovery helicopters;

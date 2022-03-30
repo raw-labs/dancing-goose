@@ -1,0 +1,12 @@
+
+
+
+
+stat_covid() := {
+
+    ( current: clast( select tx_indic_7J_hosp from read_csv("https://www.data.gouv.fr/fr/datasets/r/e3d83ab3-dc52-4c99-abaf-8a38050cc68c")),
+    
+    maximum: cmax( select tx_indic_7J_hosp from read_csv("https://www.data.gouv.fr/fr/datasets/r/e3d83ab3-dc52-4c99-abaf-8a38050cc68c")))
+    
+    }
+    

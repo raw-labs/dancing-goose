@@ -1,0 +1,18 @@
+geocode(addr: string) := {
+
+// geocode an address, using Google's API
+// usage:
+// geocode("France")
+// geocode("VANDERVOORT AVENUE AND ANTHONY STREET, New York City, NY, 11222")
+
+    key := "AIzaSyCdQZYm_wPY7m7ND7TirB19kAU_-Dv8X0M";
+    typealias t := record(`results`: collection(record(`address_components`: collection(record(`long_name`: string,`short_name`: string,`types`: collection(string))),`formatted_address`: string,`geometry`: record(`bounds`: record(`northeast`: record(`lat`: double,`lng`: double),`southwest`: record(`lat`: double,`lng`: double)) nullable,`location`: record(`lat`: double,`lng`: double),`location_type`: string,`viewport`: record(`northeast`: record(`lat`: double,`lng`: double),`southwest`: record(`lat`: double,`lng`: double))),`place_id`: string,`types`: collection(string))),`status`: string);
+
+    urlencode := \python(a: string): string -> $$$
+        import urllib.parse
+        import re
+        return urllib.parse.quote(re.sub(r'[^\x00-\x7F]+',' ', a))
+    $$$
+    
+    read_json[t]("https://maps.googleapis.com/maps/api/geocode/json?address=" + urlencode(addr) + "&key=" + key, cache := interval "90 days")
+};

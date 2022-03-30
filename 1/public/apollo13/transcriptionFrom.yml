@@ -1,0 +1,16 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Apollo13 mission transcriptions
+  description: Transcriptions from radio communications to/from Apollo13
+  tags:
+    - apollo13
+    - transcriptions
+code: rql
+declaration: transcriptionFrom
+codeFile: code.rql
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

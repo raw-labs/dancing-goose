@@ -1,0 +1,17 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Country for an ISO code
+  description: List of Country information, use any ISO code (3-letter, 2-letter, numeric) as parameter
+  tags:
+    - countries
+    - iso
+    - geography
+code: rql
+codeFile: ../../code.rql
+declaration: country_by_iso
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

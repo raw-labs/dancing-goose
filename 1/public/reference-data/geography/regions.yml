@@ -1,0 +1,16 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Regions of the World
+  description: Regions are used to segregate Countries
+  tags:
+    - regions
+    - geography
+code: rql
+codeFile: ../code.rql
+declaration: regions
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

@@ -1,0 +1,80 @@
+
+// https://opendata.datainfogreffe.fr/explore/dataset/societes-immatriculees-2021/api/
+
+url := "https://opendata.datainfogreffe.fr/api/records/1.0/search/?dataset=societes-immatriculees-2021" ;
+
+typealias societes := record(
+    `nhits`: int,
+    `parameters`: record(
+        `dataset`: collection(string),
+        `rows`: int,
+        `start`: int,
+        `facet`: collection(string) nullable,
+        `format`: string,
+        `timezone`: string
+    ),
+    `records`: collection(
+        record(
+            `datasetid`: string,
+            `recordid`: string,
+            `fields`: record(
+                `fiche_identite`: string,
+                `statut`: string,
+                `code_ape`: string nullable,
+                `siren`: string,
+                `date_immatriculation`: string,
+                `geolocalisation`: collection(double) nullable,
+                `ville`: string,
+                `adresse`: string,
+                `code_postal`: string,
+                `departement`: string nullable,
+                `denomination`: string,
+                `devise`: string,
+                `nic`: string,
+                `forme_juridique`: string,
+                `secteur_d_activite`: string nullable,
+                `sigle`: string nullable,
+                `region`: string nullable,
+                `date_de_publication`: string,
+                `num_dept`: string,
+                `etat`: string,
+                `greffe`: string,
+                `code_greffe`: string,
+                `etat_pub`: string,
+                `date_immatriculation_origine`: string nullable
+            ),
+            `geometry`: record(
+                `type`: string,
+                `coordinates`: collection(double)
+            ) nullable,
+            `record_timestamp`: string
+        )
+    ),
+    `facet_groups`: collection(
+        record(
+            `name`: string,
+            `facets`: collection(
+                        record(
+                            `name`: string,
+                            `count`: int,
+                            `state`: string,
+                            `path`: string
+                        )
+            )
+        )
+    ) nullable
+);
+
+// build the URL string with the start row and the number of rows
+buildURL(start:int, rows:int) := {
+    url+"&start="+start+"&rows="+rows
+}
+
+// read one row to get total number of records
+nhits:=read_json[societes]( buildURL(0,1) ).nhits;
+increment:=100;
+// read either the number passed or all with pagination
+societes_immatriculees(n : int := nhits) := {
+    select * from range(0,n,increment) i, read_json[societes]( buildURL(i,increment)) as result
+}
+

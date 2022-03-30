@@ -1,0 +1,54 @@
+//
+// https://exchangeratesapi.io/
+// Needs registration to get API Key and 1.000 free calls
+//
+// Retrieving Exchange Rates
+// Documentation: https://exchangeratesapi.io/documentation/
+// 
+// Example: 
+// https://api.exchangeratesapi.io/v1/latest?access_key=API_KEY
+//
+
+// API endpoint
+exratesURL:="http://api.exchangeratesapi.io/v1/latest";
+
+// Key
+API_KEY := "91c90d636b6fdcd963518305395b3c12";
+
+
+typealias rates := record(
+    `success`: bool,
+    `timestamp`: int,
+    `base`: string,
+    `date`: string,
+    `rates`: record(
+        `USD`: double,
+        `CHF`: double,
+        `GBP`: double,
+        `CNY`: double,
+        `CAD`: double,
+        `AUD`: double
+        // Add needed currencies here
+    )
+);
+
+
+// get the data and parse results
+p:= HTTP( exratesURL+"?access_key="+API_KEY, method := "GET");
+currentrates:=parse_json[rates](p.data)
+
+// convert amount from one currency to another
+convert(`amount`:double, `src`:string, `dest`:string):= {
+    conv:= [
+        ("EUR", 1.0 ),
+        ("USD", currentrates.rates.USD ),
+        ("CHF", currentrates.rates.CHF ),
+        ("GBP", currentrates.rates.GBP ),
+        ("CNY", currentrates.rates.CNY ),
+        ("CAD", currentrates.rates.CAD ),
+        ("AUD", currentrates.rates.AUD )
+        ];
+    src_eur:=select _2 from conv where `src` = _1;
+    dest_eur:=select _2 from conv where `dest` = _1;
+    `amount`*cfirst(dest_eur) / cfirst(src_eur)
+};

@@ -1,0 +1,13 @@
+cities := select * from read("https://raw.githubusercontent.com/raw-labs/demos.raw-labs.com/master/1/public/ISS/worldcities.csv");
+iss := read("http://api.open-notify.org/iss-now.json");
+
+iss_cities() := {
+  select
+    city_ascii,
+    lat,
+    lng,
+    country,
+    sqrt( power((lat-cast(iss.iss_position.latitude as double)),2) +power((lng-cast(iss.iss_position.longitude as double)),2) ) as distance
+  from cities
+    order by distance asc
+}

@@ -1,0 +1,15 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Fund Currencies list
+  description: Fund Currencies used by funds but are not 'real' currencies
+  tags:
+    - currencies
+code: rql
+codeFile: ../code.rql
+declaration: fund_currencies
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

@@ -1,0 +1,184 @@
+// You need to go to the following link to get a token
+// and update the code below before running it
+// https://developer.spotify.com/console/get-current-user-playlists
+
+token:="... your token";
+
+
+spotifyHeaders:=[("Authorization", "Bearer "+token),
+                ("Accept", "application/json"),
+                ("Content-Type","application/json")];
+
+// playlist description
+// https://developer.spotify.com/documentation/web-api/reference/#/operations/get-playlist
+
+// track description
+// https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track
+
+
+// single playlist
+typealias playlist := record(
+                collaborative: bool,
+                description: string nullable,
+                external_urls: record( spotify: string ),
+                followers: record(
+                            href: string nullable,
+                            total: int ) nullable,
+                href: string,
+                id: string,
+                images: collection( record(
+                        height: int nullable,
+                        url: string,
+                        width: int nullable) ) nullable,
+                name: string,
+                owner: record(
+                        display_name: string nullable,
+                        external_urls: record( spotify: string ),
+                        followers: record( 
+                                href: string nullable, 
+                                total: int ) nullable,
+                        href: string,
+                        id: string,
+                        images: collection( record(
+                                    url: string,
+                                    height: int,
+                                    width: int) ) nullable,
+                        type: string,
+                        uri: string
+                        ),               
+                public: bool nullable,
+                snapshot_id: string,
+                tracks: record( href: string, total: int ),
+                type: string,
+                uri: string
+                );
+
+// paginated playlists
+typealias playlists := record(
+    href: string,
+    items : collection( playlist ),
+    `limit`: int,
+    next: string nullable,
+    offset: int,
+    previous: string nullable,
+    total: int
+);
+
+// single track
+typealias track := record(
+    `album`: record(
+        `album_type`: string,
+        `total_tracks`: int,
+        `available_markets`: collection( string ),
+        `external_urls`: record( spotify: string ),
+        href: string nullable,
+        id: string,
+        images: collection( record(
+                            url: string,
+                            height: int,
+                            width: int) ) nullable,
+        name: string,
+        release_date: string,
+        release_date_precision: string,
+        restrictions: record( reason: string ) nullable,
+        type: string,
+        uri: string,
+        album_group: string nullable,
+        artists: collection( record(
+           `external_urls`: record( spotify: string ),
+           href: string nullable,
+           name: string,
+           type: string,
+           id: string,
+           uri:string ) ) 
+        ),
+        artists: collection( record(
+           `external_urls`: record( spotify: string ),
+            followers: record(
+                href: string nullable,
+                total: int ) nullable,
+            genre: collection( string ) nullable,
+            href: string nullable,
+            id: string,
+            images: collection( record(
+                url: string,
+                height: int,
+                width: int) ) nullable,
+            name: string,
+            popularity: int nullable,
+            type: string,
+            uri: string
+            ) ),
+        
+        `available_markets`: collection( string ),
+        disc_number: int,
+        duration_ms:int,
+        explicit: bool,
+        external_ids: record(
+            isrc: string nullable,
+            ean: string nullable,
+            upc: string nullable),
+        `external_urls`: record( spotify: string ),
+        href: string nullable,
+        id: string nullable,
+        is_playable: bool nullable,
+        linked_from: record() nullable,
+        restrictions: record( reason: string ) nullable,
+        name: string nullable,
+        popularity: int nullable,
+        preview_url: string nullable,
+        track_number: int,
+        type: string,
+        uri: string
+);
+
+// paginated tracks
+typealias tracks := record(
+    href: string nullable,
+    items : collection( record(
+            added_at:string,
+            added_by:record(`external_urls`: record( spotify:     string ),
+                href: string nullable,
+                id: string,
+                type: string,
+                uri:string),
+            is_local:bool,
+            primary_color: string nullable,
+            track: track
+            )),
+    `limit`: int,
+    next: string nullable,  
+    offset: int,
+    previous: string nullable,
+    total: int
+);
+
+
+// API call to get data from paginated playlists
+get_playlists_at_offset(offset: int) := {
+    p := HTTP( "https://api.spotify.com/v1/me/playlists?offset="+offset, method := "GET", headers := spotifyHeaders );
+    parse_json[playlists](p.data)
+};
+
+// make one call to get number of playlists
+first_call:= get_playlists_at_offset(0);
+nPlaylists:=first_call.total;
+nLimit:=first_call.`limit`;
+                    
+// loop within the playlists
+// by calling paginated results
+myplaylists:=select p from offset in range(0, nPlaylists, nLimit), p in get_playlists_at_offset(offset).items
+
+// API call to get data from paginated tracks
+get_track_items(idt: string) := {
+    t := HTTP( "https://api.spotify.com/v1/playlists/"+idt+"/tracks", 
+            method := "GET",
+            headers := spotifyHeaders );
+    parse_json[tracks](t.data).items
+};
+
+// this works
+select t.track from myplaylists m, get_track_items(m.id) t
+// this doesn't works
+//select t.track.name from myplaylists m, get_track_items(m.id) t
+

@@ -1,0 +1,15 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Cities closest to ISS position
+  description: Return City distances from the current ISS position 
+  tags:
+    - geocoding
+code: rql
+codeFile: cities.rql
+declaration: iss_cities
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true

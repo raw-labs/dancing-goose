@@ -1,0 +1,17 @@
+
+// interface to opencagedata.com
+
+api_key := "83d91ec79e8842efa3a63d469af9b9fe"
+
+typealias reverse_geocode := record(`results`: collection( record(`formatted`: string )))
+
+getlocation(lat:double, lon:double) := {
+    d := HTTP( "https://api.opencagedata.com/geocode/v1/json?key="+api_key+"&q="+lat+"%2C"+lon );
+    cfirst( select formatted as Location from parse_json[reverse_geocode](d.data).results ).Location
+}
+
+isslocation() := {
+    iss := read_json("http://api.open-notify.org/iss-now.json");
+    getlocation(cast(iss.iss_position.latitude as double), 
+                cast(iss.iss_position.longitude as double) )
+}
