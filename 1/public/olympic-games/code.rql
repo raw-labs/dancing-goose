@@ -1,7 +1,7 @@
 athletes :=
   READ_CSV("s3://rawlabs-private-test-data/summer_olympics.csv")
   UNION ALL
-  READ_CSV("s3://rawlabs-public-test-data/winter_olympics.csv")
+  READ_CSV("s3://rawlabs-private-test-data/winter_olympics.csv")
 
 country_codes :=
   READ_CSV("https://pkgstore.datahub.io/core/country-codes/country-codes_csv/data/c4df23af89a9386f92cbddcd54bc9852/country-codes_csv.csv", has_header := true)
