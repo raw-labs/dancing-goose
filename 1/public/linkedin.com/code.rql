@@ -1,0 +1,1 @@
+SELECT * FROM READ_LINES("https://api.linkedin.com/v2/me", http_method:="GET", http_auth_cred_name := "mylinkedintoken")

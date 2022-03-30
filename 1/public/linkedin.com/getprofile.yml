@@ -1,0 +1,15 @@
+raw: 0.9
+endpoint: GET
+metadata:
+  title: Fetch my LinkedIn profile
+  description: Fetch my LinkedIn profile
+  tags:
+    - linkedin
+code: rql
+codeFile: code.rql
+declaration: 
+format: json
+security:
+  public: true
+computeClass: normal
+enabled: true
