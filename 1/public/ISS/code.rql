@@ -1,4 +1,3 @@
-
 // 
 // where is the ISS over the Earth ?
 //
@@ -6,7 +5,6 @@
 from `github://raw-labs/lib/1/public/opencagedata.com/opencagedata.rql` import geocode;
 from `github://raw-labs/lib/1/public/open-notify.org/open-notify.rql` import iss_location_1sec;
 
-//
 // this returns the location over wich the ISS is NOW
 // a string in English
 isslocation() := {
@@ -15,9 +13,8 @@ isslocation() := {
     cfirst(geo.results).formatted
 };
 
-//
 // this returns a link to a URL to OpenStreetMap with the current position of the ISS
-// 
+
 isslocationosm() := {
     geo := geocode( secret("opencagedata.com"),
              iss_location_1sec().iss_position.latitude+","+iss_location_1sec().iss_position.longitude )
