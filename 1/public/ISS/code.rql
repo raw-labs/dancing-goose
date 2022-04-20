@@ -1,6 +1,7 @@
 
 // interface to opencagedata.com
 
+
 api_key := "83d91ec79e8842efa3a63d469af9b9fe"
 
 typealias reverse_geocode := record(`results`: collection( record(`formatted`: string )))
