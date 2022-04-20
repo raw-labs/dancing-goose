@@ -8,7 +8,7 @@ from `github://raw-labs/lib/1/public/open-notify.org/open-notify.rql` import iss
 // this returns the location over wich the ISS is NOW
 // a string in English
 isslocation() := {
-    geo := geocode( secret("opencagedataa.com"),
+    geo := geocode( secret("opencagedata.com"),
              iss_location_1sec().iss_position.latitude+","+iss_location_1sec().iss_position.longitude )
     cfirst(geo.results).formatted
 };
@@ -16,7 +16,7 @@ isslocation() := {
 // this returns a link to a URL to OpenStreetMap with the current position of the ISS
 
 isslocationosm() := {
-    geo := geocode( secret("opencagedataa.com"),
+    geo := geocode( secret("opencagedata.com"),
              iss_location_1sec().iss_position.latitude+","+iss_location_1sec().iss_position.longitude )
     cfirst(geo.results).annotations.OSM.url
 };
