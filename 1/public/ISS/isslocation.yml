@@ -13,4 +13,6 @@ metadata:
   tags:
     - ISS
 security:
-  public: true
+  public: false
+  scopes:
+    - iss
