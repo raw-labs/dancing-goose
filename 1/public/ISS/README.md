@@ -1,6 +1,6 @@
 # ISS
 
-Simple API Integration examples
+Simple API Integration examples.
 
 Geocoding API: https://www.opencagedata.com/ as implemented in the RAW Labs library
 https://github.com/raw-labs/lib/tree/main/1/public/open-notify.org
